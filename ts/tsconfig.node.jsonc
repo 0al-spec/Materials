@@ -1,0 +1,25 @@
+{
+  "extends": ["./tsconfig.default.jsonc"],
+  "compilerOptions": {
+    "composite": true,
+    "incremental": true,
+    "target": "ESNext",
+    "lib": ["ESNext"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    // "listFiles": true,
+
+    /* Bundler mode */
+    "moduleResolution": "Bundler",
+    //    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    // Treat files as modules even if it doesn't use import/export
+    "moduleDetection": "force",
+    // Allow JSON modules to be imported
+    "resolveJsonModule": true,
+    "noEmit": false,
+    "noEmitOnError": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": false
+  }
+}

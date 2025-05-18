@@ -1,0 +1,100 @@
+{
+  "formatter": {
+    "indentStyle": "space", // default is `tab`
+    "lineWidth": 60 // default is `80`
+  },
+
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "correctness": {
+        /* Off */
+        "noUnusedVariables": "off",
+
+        /** Warn, Not fix */
+        // TODO: Works incorrect. E.g: anf/AbstractBoolVar.count
+        "noUnusedPrivateClassMembers": "off",
+
+        /* Warning, Safe fix */
+        "noUnusedImports": {
+          "level": "warn",
+          "fix": "safe"
+        },
+
+        /* Error */
+        "noInvalidUseBeforeDeclaration": "error",
+
+        /* Error: React */
+        "noRenderReturnValue": "error",
+        "useExhaustiveDependencies": "error",
+        "useHookAtTopLevel": "error"
+      },
+      "nursery": {
+        /* Warn, Not fixable */
+        "noExportedImports": "warn",
+
+        /* Error: React */
+        "useComponentExportOnlyModules": "error"
+      },
+      "style": {
+        /* Off */
+        "noUselessElse": "off",
+        "noParameterAssign": "off",
+
+        /* Warn, Not fix */
+
+        /* Error, Safe fix */
+        "useImportType": {
+          "level": "error",
+          "fix": "safe"
+        },
+        "noUnusedTemplateLiteral": {
+          "level": "error",
+          "fix": "safe"
+        },
+        "useNodejsImportProtocol": {
+          "level": "error",
+          "fix": "safe"
+        }
+      },
+      "complexity": {
+        /* Off */
+        "noForEach": "off",
+        "noUselessConstructor": "off",
+
+        /* Warn, Not fixable */
+        "noBannedTypes": "warn",
+
+        /* Warn, Not fix */
+
+        /* Error, Safe fix */
+        "useLiteralKeys": {
+          "level": "warn",
+          "fix": "safe"
+        }
+      },
+      "suspicious": {
+        /* Warn, Not fixable */
+        "noSelfCompare": "warn",
+        "noShadowRestrictedNames": "warn",
+        "noExplicitAny": "warn",
+
+        /* Error: React */
+        "noReactSpecificProps": "off"
+      }
+    }
+  },
+
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single" // default is `double`
+      // , "lineWidth": 60 // override `formatter.lineWidth`
+    }
+  },
+  "json": {
+    "formatter": {
+      "enabled": true
+      // , "lineWidth": 60 // override `formatter.lineWidth`
+    }
+  }
+}

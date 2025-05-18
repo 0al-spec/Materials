@@ -1,0 +1,9 @@
+{
+  "name": "@al/agent",
+  "description": "Agent Draft",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "dependencies": {}
+}
