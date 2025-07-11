@@ -92,14 +92,6 @@ Database:
   driver: "sqlite"
   path: "/var/tmp/dev.db"
 
-# --- Production Overrides ---
-@env[production]:
-  Database:
-    driver: "postgresql"
-    host: "${DB_HOST}" # Values can be interpolated from env vars
-    user: "${DB_USER}"
-    password: "${DB_PASS}"
-
 WebServer > Listen:
   port: 3000
 
