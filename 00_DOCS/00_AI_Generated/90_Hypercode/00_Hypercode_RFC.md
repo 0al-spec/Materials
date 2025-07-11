@@ -1,7 +1,9 @@
 # Hypercode: A Declarative Paradigm for Context-Aware Programming
 
 **Status:** Draft
+
 **Author:** Egor Merkushev
+
 **Date:** July 8, 2025
 
 ## 1. Abstract
@@ -13,6 +15,7 @@ This document proposes **Hypercode**, a declarative programming paradigm designe
 Modern software systems suffer from a high degree of configuration complexity. Business logic is often intertwined with environment-specific checks (`if (env === 'production')`), boilerplate for dependency injection, and scattered configuration values. This increases cognitive load, complicates maintenance, and reduces the readability of the core logic.
 
 Hypercode aims to solve this by:
+
 1.  **Maximizing Separation of Concerns:** Isolating the *what* (the logical structure) from the *how* (the concrete implementation and data).
 2.  **Reducing Boilerplate:** Eliminating conditional environment checks and manual dependency wiring from the application logic.
 3.  **Improving Readability:** Presenting the program's core logic as a clean, hierarchical structure, free from implementation details.
@@ -56,6 +59,7 @@ The HCS uses a YAML-based syntax with special selectors to apply configuration d
 #### 4.2.1. Selectors
 
 *  **Type Selector:** Targets a command by its name.
+
     ```hcs
     Database:
       driver: “sqlite”
@@ -63,18 +67,21 @@ The HCS uses a YAML-based syntax with special selectors to apply configuration d
     ```
 
 *  **Class Selector:** Targets all commands with a given class.
+
     ```hcs
     .pooled:
       pool_size: 20
     ```
 
 *  **ID Selector:** Targets the single command with a unique ID.
+
     ```hcs
     ’#primary-db’:
       host: “override.db.host.com”
     ```
 
 *  **Child Selector:** Targets direct children of a command.
+
     ```hcs
     WebServer > Listen:
       port: 8080
@@ -113,6 +120,7 @@ WebServer > Listen:
 #### 4.2.3. Cascade and Specificity
 
 The HCS resolution process follows a strict order of precedence, analogous to CSS:
+
 1.  **Origin and Importance:** Rules applied from more specific sources (e.g., a user-provided override file) can take precedence over base rules.
 2.  **Specificity:** A selector's specificity is calculated based on its components. From highest to lowest: ID (`#id`), Class (`.class`), Type (`Command`). A more specific selector always overrides a less specific one. (e.g., `#primary-db` overrides `.pooled`).
 3.  **Source Order:** If two selectors have the same specificity, the one that appears later in the document wins.
@@ -171,8 +179,18 @@ APIServer > Listen:
 ```
 
 **Execution:**
- *  `hypercode-runner app.hc --hcs config.hcs`: Runs the app with the development SQLite database.
- *  `hypercode-runner app.hc --hcs config.hcs --env production`: Runs the same app, but it now uses a PostgreSQL database and logs in JSON format. The core logic in `app.hc` remains untouched.
+
+ *  Runs the app with the development SQLite database:
+
+ ```bash
+ hypercode-runner app.hc --hcs config.hcs
+ ```
+
+ *  Runs the same app, but it now uses a PostgreSQL database and logs in JSON format. The core logic in `app.hc` remains untouched:
+
+ ```bash
+ hypercode-runner app.hc --hcs config.hcs --env production
+ ```
 
 ## 6. Comparison to Existing Concepts
 
