@@ -10,8 +10,8 @@ EXAMPLE=example.hc
 # All generated files
 GEN_FILES=$(GRAMMAR)Lexer.java \
            $(GRAMMAR)Parser.java \
-           $(GRAMMAR)BaseListener.java \
-           $(GRAMMAR)Listener.java \
+           $(GRAMMAR)ParserBaseListener.java \
+           $(GRAMMAR)ParserListener.java \
            $(GRAMMAR)Lexer.tokens \
            $(GRAMMAR)Parser.tokens \
            $(GRAMMAR).tokens \
@@ -30,7 +30,8 @@ build: $(ANTLR_JAR)
 	javac -cp ".:$(ANTLR_JAR)" Hypercode*.java
 
 run: build
-	java -Xmx500M -cp ".:$(ANTLR_JAR)" org.antlr.v4.gui.TestRig HypercodeParser hypercode -lexer HypercodeLexer $(EXAMPLE) -tree
+	javac -cp ".:$(ANTLR_JAR)" Main.java
+	java -cp ".:$(ANTLR_JAR)" Main
 
 TEST_DIR := hypercode_tests
 TEST_FILES := $(wildcard $(TEST_DIR)/*.hc)
@@ -40,7 +41,7 @@ test-all: build
 	@pass=0; fail=0; \
 	for f in $(TEST_FILES); do \
 	  echo "==> Testing $$f"; \
-	  output=$$(java -Xmx500M -cp ".:$(ANTLR_JAR)" org.antlr.v4.gui.TestRig HypercodeParser hypercode -lexer HypercodeLexer $$f -tree 2>&1);
+	  output=$$(java -Xmx500M -cp ".:$(ANTLR_JAR)" org.antlr.v4.gui.TestRig HypercodeParser hypercode -lexer HypercodeLexer $$f -tree 2>&1); \
 	  if echo "$$output" | grep -q "line"; then \
 	    if echo "$$f" | grep -q '/X'; then \
 	      result="✅ PASS (expected error)"; \
