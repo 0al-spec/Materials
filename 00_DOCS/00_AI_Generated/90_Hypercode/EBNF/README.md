@@ -21,77 +21,46 @@ make run
 The first run will automatically:
 
 1. Download `antlr-4.13.0-complete.jar`
-2. Generate Java sources from `Hypercode.g4`
+2. Generate Java sources from `HypercodeLexer.g4` and `HypercodeParser.g4`
 3. Compile the parser and lexer
-4. Parse and visualize `example.hc`
+4. Parse and print the structure of `example.hc`
 
 ## 📁 Directory Layout
 
 ```
 examples/antlr/
-├── Hypercode.g4       # ANTLR4 grammar for .hc files
-├── example.hc         # Sample Hypercode input file
-├── Makefile           # Build, run, clean
-├── .gitignore         # Ignores generated files
+├── HypercodeLexer.g4       # ANTLR4 lexer grammar (tokens, indentation)
+├── HypercodeParser.g4      # ANTLR4 parser grammar (commands, blocks)
+├── example.hc              # Sample Hypercode input file
+├── Main.java               # Parse entry-point for .hc files
+├── Makefile                # Build, run, test, clean
+├── hypercode_tests/        # Test suite for the grammar
+├── .gitignore              # Ignores generated files
 ```
 
 ## 🛠️ Available Commands
 
 ```bash
-make            # Downloads ANTLR and builds everything
-make run        # Parses example.hc and shows the parse tree
-make clean      # Removes generated files and classes
+make             # download JAR, build and run parser on example.hc
+make run         # re-run Main.java with example.hc
+make test-all    # run all grammar tests in hypercode_tests/
+make clean       # remove generated files
 ```
 
-You can also run with a custom file:
+To run a different file:
 
 ```bash
-make run FILE=mytest.hc
+make run EXAMPLE=hypercode_tests/03-nesting.hc
 ```
 
-## 🔍 Sample Output
+## 🧪 Development Notes
 
-Given `example.hc`:
+- Grammar is split into **HypercodeLexer.g4** and **HypercodeParser.g4**
+- Indentation is handled via custom Java logic in `nextToken()` (see `@members`)
+- Tokens `INDENT` and `DEDENT` are inserted based on change in indentation level
+- The parser entry point is `hypercode`
+- Output is generated via `Main.java` — a minimal runtime for inspection
 
-```hc
-Application
-Button
-Cancel
-```
-
-The command:
-
-```bash
-make run
-```
-
-Produces:
-
-```
-(hypercode
-  (line (commandLine (command Application) \n))
-  (line (commandLine (command Button) \n))
-  (line (commandLine (command Cancel) \n))
-)
-```
-
-## 🧼 Cleanup
-
-To remove all generated files:
-
-```bash
-make clean
-```
-
-## 🤝 Contributing
-
-If you're contributing to the grammar:
-
-- Edit `Hypercode.g4`
-- Use `make run` to test your changes
-- See `example.hc` for syntax samples
-- Don’t commit `.class`, `.tokens`, or `.interp` files — they’re ignored
-
-## 📄 License
+## 📦 License
 
 This directory is part of the [Hypercode project](https://github.com/0AL/Hypercode) and licensed under MIT.
