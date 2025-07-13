@@ -39,11 +39,22 @@ clean:
 
 .PHONY: all build run clean
 
+# Test Hypercode
 TEST_DIR := hypercode_tests
 TEST_FILES := $(wildcard $(TEST_DIR)/*.hc)
 
 test-all: build
-	@for f in $(TEST_FILES); do \
+	@echo "🧪 Running Hypercode grammar tests..."
+	@pass=0; fail=0; \
+	for f in $(TEST_FILES); do \
 	  echo "==> Testing $$f"; \
-	  java -Xmx500M -cp ".:$(ANTLR_JAR)" org.antlr.v4.gui.TestRig Hypercode hypercode $$f -tree || echo "Failed: $$f"; \
-	done
+	  output=$$(java -Xmx500M -cp ".:$(ANTLR_JAR)" org.antlr.v4.gui.TestRig Hypercode hypercode $$f -tree 2>&1); \
+	  echo "$$output" | grep -q "line" && result="❌ FAIL" || result="✅ PASS"; \
+	  echo "$$result: $$f"; \
+	  [ "$$result" = "✅ PASS" ] && pass=$$((pass+1)) || fail=$$((fail+1)); \
+	  echo "$$output" | sed 's/^/    /'; \
+	done; \
+	echo ""; \
+	echo "✅ Passed: $$pass"; \
+	echo "❌ Failed: $$fail"; \
+	echo "📊 Total:  $$((pass + fail))"
