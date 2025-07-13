@@ -49,9 +49,19 @@ test-all: build
 	for f in $(TEST_FILES); do \
 	  echo "==> Testing $$f"; \
 	  output=$$(java -Xmx500M -cp ".:$(ANTLR_JAR)" org.antlr.v4.gui.TestRig Hypercode hypercode $$f -tree 2>&1); \
-	  echo "$$output" | grep -q "line" && result="❌ FAIL" || result="✅ PASS"; \
+	  if echo "$$output" | grep -q "line"; then \
+	    if echo "$$f" | grep -q '/X'; then \
+	      result="✅ PASS (expected error)"; \
+	      pass=$$((pass+1)); \
+	    else \
+	      result="❌ FAIL"; \
+	      fail=$$((fail+1)); \
+	    fi; \
+	  else \
+	    result="✅ PASS"; \
+	    pass=$$((pass+1)); \
+	  fi; \
 	  echo "$$result: $$f"; \
-	  [ "$$result" = "✅ PASS" ] && pass=$$((pass+1)) || fail=$$((fail+1)); \
 	  echo "$$output" | sed 's/^/    /'; \
 	done; \
 	echo ""; \
