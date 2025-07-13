@@ -2,9 +2,23 @@
 
 **Status:** Draft
 
-**Author:** Egor Merkushev
+**Version:** 0.1
 
 **Date:** July 8, 2025
+
+**Author:** Egor Merkushev
+
+**Licence:** MIT
+
+## Status of this Document
+
+This document is a **draft specification** for the Hypercode programming paradigm. It is intended to introduce the core concepts, syntax, and execution model of Hypercode and its companion format, Hypercode Cascade Sheets (HCS). The purpose of this draft is to facilitate discussion and gather feedback from the broader developer, systems, and programming language communities.
+
+This is **not yet a finalized standard**, and details in syntax, behavior, or terminology are subject to change. Implementers are advised to treat this version as **experimental** and to expect updates as the model evolves based on practical feedback and further validation.
+
+Feedback and contributions are welcome via the [project’s GitHub repository](https://github.com/0al-spec/hypercode) or issue tracker.
+
+This document is released under the MIT License and follows open specification principles, similar in spirit to community-driven RFCs.
 
 ## 1. Abstract
 
@@ -16,20 +30,31 @@ Modern software systems suffer from a high degree of configuration complexity. B
 
 Hypercode aims to solve this by:
 
-1.  **Maximizing Separation of Concerns:** Isolating the *what* (the logical structure) from the *how* (the concrete implementation and data).
-2.  **Reducing Boilerplate:** Eliminating conditional environment checks and manual dependency wiring from the application logic.
-3.  **Improving Readability:** Presenting the program's core logic as a clean, hierarchical structure, free from implementation details.
-4.  **Enabling Dynamic Context-Awareness:** Allowing the program's behavior to be radically altered by external configuration files without modifying the core logic.
+1. **Maximizing Separation of Concerns:** Isolating the *what* (the logical structure) from the *how* (the concrete implementation and data).
+2. **Reducing Boilerplate:** Eliminating conditional environment checks and manual dependency wiring from the application logic.
+3. **Improving Readability:** Presenting the program's core logic as a clean, hierarchical structure, free from implementation details.
+4. **Enabling Dynamic Context-Awareness:** Allowing the program's behavior to be radically altered by external configuration files without modifying the core logic.
 
 ## 3. Core Concepts
 
+### 3.1 Paradigm
+
 The Hypercode paradigm is built on three main components:
 
-*  **Hypercode (`.hc` file):** A file describing the application's logical structure using simple, indentation-based hierarchy. It contains abstract commands or entities. It is analogous to an HTML document's structure.
+*  **Hypercode (`.hc` file):** A file describing the application's logical structure using simple, indentation-based hierarchy. It contains abstract commands or entities. It is analogous to an HTML document's structure. See [Hypercode Syntax Specification](./hypercode-syntax.md) for the formal grammar of `.hc` files.
 
 *  **Hypercode Cascade Sheet (`.hcs` file):** A YAML-like file that defines how to interpret and configure the commands in the Hypercode file. It uses selectors to target commands and apply configurations. It is analogous to a CSS stylesheet.
 
 *  **Runtime Environment:** An engine that parses both the `.hc` and `.hcs` files, resolves the configurations by applying the HCS rules to the Hypercode structure, and executes the resulting program.
+
+### 3.2 Terminology
+
+* **Hypercode (.hc)** — A declarative file describing the logical structure of a program in an indented, hierarchical format.
+* **Hypercode Cascade Sheet (HCS, .hcs)** — A YAML-compatible file that configures Hypercode entities using selectors.
+* **Selector** — A mechanism for addressing elements in a Hypercode file: by type, class, ID, or structural position (similar to CSS selectors).
+* **Rule (`@env[...]`)** — A context-aware rule group activated when a specific condition is met.
+* **Execution Context** — The environment that determines which HCS rules are active (e.g., `env=production`).
+* **Resolution Algorithm** — The process for resolving applicable rules based on specificity, precedence, and cascading logic.
 
 ## 4. Syntax and Semantics
 
@@ -192,14 +217,47 @@ APIServer > Listen:
  hypercode-runner app.hc --hcs config.hcs --env production
  ```
 
-## 6. Comparison to Existing Concepts
+ ## 6. Compatibility and Interoperability
+
+ Hypercode is designed to be environment-agnostic and compatible with a variety of runtimes and deployment systems. Potential integrations include:
+
+ - Embedding HCS resolution in Kubernetes Admission Controllers.
+ - Generating `.env` files from rules for legacy apps.
+ - Translating Hypercode into Terraform modules via adapters.
+
+## 7. Media Types and File Extensions
+
+- File extensions: `.hc`, `.hcs`
+- Suggested MIME type: `application/hypercode+yaml`
+
+## 8. Security Considerations
+
+Hypercode and HCS are declarative and do not define runtime execution isolation or sandboxing. If used in multi-tenant environments, additional security measures (e.g., containerization, seccomp, chroot) should be applied externally.
+
+The specification assumes that the resolution and execution engine is trusted. No mechanisms are currently defined for verifying integrity of `.hcs` rules or controlling their provenance. Future versions may include digital signing or validation capabilities.
+
+## 9. Comparison to Existing Concepts
 
 *  **Dependency Injection (DI):** Hypercode can be seen as a form of declarative, externalized DI. Unlike traditional DI containers configured via XML or annotations, HCS provides a more expressive and dynamic configuration mechanism through selectors and @rules.
 *  **Templating Engines (e.g., Jinja, Handlebars):** While similar, templating engines typically generate static text or configuration files. Hypercode is concerned with generating and configuring a live, executable program graph.
 *  **Infrastructure as Code (IaC, e.g., Ansible, Terraform):** Hypercode shares the declarative philosophy of IaC tools but applies it to the application logic itself, rather than to the underlying infrastructure. It defines the application's runtime behavior, not just its deployment environment using HCS.
 
-## 7. Open Questions
+## 10. Open Questions
 
 *  **Debugging and Tooling:** How can developers effectively trace why a specific configuration was applied? This would require specialized debugging tools that can visualize the cascade and resolution of HCS rules.
 *  **Performance:** The overhead of parsing and resolving the HCS at startup needs to be analyzed. A JIT (Just-In-Time) resolution or an AOT (Ahead-Of-Time) compilation step might be necessary for performance-critical applications.
 *  **Complexity Management:** While HCS simplifies the core logic, very large and complex HCS files could become difficult to manage themselves. Best practices and modularization strategies would be required. This could include extending the at-rule system with directives like `@import`, allowing for better organization of large configurations.
+
+## 11. References
+
+* [Hypercode Syntax Specification (BNF)](https://github.com/0al/hypercode/hypercode-syntax.md)
+* [W3C CSS 2.1 Specification](https://www.w3.org/TR/CSS21/)
+* [YAML 1.2 Spec (OASIS)](https://yaml.org/spec/1.2/)
+* [Spring Framework: Dependency Injection](https://docs.spring.io/spring-framework/reference/core/beans/)
+* [Terraform Configuration Language](https://developer.hashicorp.com/terraform/language)
+
+## 12. Change Log
+
+**Version 0.1** (2025-07-12):
+
+* Initial public draft with definition of Hypercode, HCS, selectors, rules, and example syntax.
