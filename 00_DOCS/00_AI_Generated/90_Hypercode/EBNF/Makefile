@@ -38,3 +38,12 @@ clean:
 	rm -f $(GEN_FILES)
 
 .PHONY: all build run clean
+
+TEST_DIR := hypercode_tests
+TEST_FILES := $(wildcard $(TEST_DIR)/*.hc)
+
+test-all: build
+	@for f in $(TEST_FILES); do \
+	  echo "==> Testing $$f"; \
+	  java -Xmx500M -cp ".:$(ANTLR_JAR)" org.antlr.v4.gui.TestRig Hypercode hypercode $$f -tree || echo "Failed: $$f"; \
+	done
