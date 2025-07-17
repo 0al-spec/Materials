@@ -63,17 +63,17 @@ test-all: build
 	echo "❌ Failed: $$fail"; \
 	echo "📊 Total:  $$((pass + fail))"
 
-	@$(MAKE) clean
+	@$(MAKE) clean QUIET=1
 
 clean:
 	@C=0; \
 	for f in $(GEN_FILES); do \
 	  if [ -f "$$f" ]; then \
-	    [ "$$C" -eq 0 ] && echo "🧹 Cleaned up:"; \
-	    echo "  • $$f"; \
+	    [ "$(QUIET)" != "1" ] && [ "$$C" -eq 0 ] && echo "🧹 Cleaned up:"; \
+	    [ "$(QUIET)" != "1" ] && echo "  • $$f"; \
 	    rm -f "$$f" || true; \
 	    C=1; \
 	  fi; \
 	done; \
-	[ "$$C" -eq 0 ] && echo "🧼 Nothing to clean."; \
+	[ "$$C" -eq 0 ] && [ "$(QUIET)" != "1" ] && echo "🧼 Nothing to clean."; \
 	true
