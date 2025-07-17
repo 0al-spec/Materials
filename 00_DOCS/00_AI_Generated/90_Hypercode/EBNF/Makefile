@@ -16,7 +16,8 @@ GEN_FILES=$(GRAMMAR)Lexer.java \
            $(GRAMMAR)Parser.tokens \
            $(GRAMMAR).tokens \
            $(GRAMMAR)*.class \
-           $(GRAMMAR)*.interp
+           $(GRAMMAR)*.interp \
+           Main.class
 
 .PHONY: all build run test-all clean
 
@@ -62,5 +63,17 @@ test-all: build
 	echo "❌ Failed: $$fail"; \
 	echo "📊 Total:  $$((pass + fail))"
 
+	@$(MAKE) clean
+
 clean:
-	rm -f $(GEN_FILES)
+	@C=0; \
+	for f in $(GEN_FILES); do \
+	  if [ -f "$$f" ]; then \
+	    [ "$$C" -eq 0 ] && echo "🧹 Cleaned up:"; \
+	    echo "  • $$f"; \
+	    rm -f "$$f" || true; \
+	    C=1; \
+	  fi; \
+	done; \
+	[ "$$C" -eq 0 ] && echo "🧼 Nothing to clean."; \
+	true
