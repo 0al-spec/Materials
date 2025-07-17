@@ -1,2 +1,2 @@
-Button #onlyId
+Button#onlyId
 Button.primary

@@ -1,6 +1,6 @@
 Application
 
-  Button.primary    #confirm
+  Button.primary#confirm
 
 
   Cancel

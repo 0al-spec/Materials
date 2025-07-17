@@ -26,9 +26,10 @@ all: run
 $(ANTLR_JAR):
 	curl -O $(ANTLR_URL)
 
-build: $(ANTLR_JAR)
-	java -Xmx500M -cp "$(ANTLR_JAR)" org.antlr.v4.Tool $(SRC_LEXER) $(SRC_PARSER)
+build:
+	java -Xmx500M -cp "$(ANTLR_JAR)" org.antlr.v4.Tool HypercodeLexer.g4 HypercodeParser.g4
 	javac -cp ".:$(ANTLR_JAR)" Hypercode*.java
+	javac -cp ".:$(ANTLR_JAR)" Main.java
 
 run: build
 	javac -cp ".:$(ANTLR_JAR)" Main.java
@@ -42,28 +43,32 @@ test-all: build
 	@pass=0; fail=0; \
 	for f in $(TEST_FILES); do \
 	  echo "==> Testing $$f"; \
-	  output=$$(java -Xmx500M -cp ".:$(ANTLR_JAR)" org.antlr.v4.gui.TestRig HypercodeParser hypercode -lexer HypercodeLexer $$f -tree 2>&1); \
-	  if echo "$$output" | grep -q "line"; then \
+	  output=$$(java -cp ".:$(ANTLR_JAR)" Main $$f 2>&1); \
+	  if echo "$$output" | grep -q "line [0-9]*:"; then \
 	    if echo "$$f" | grep -q '/X'; then \
-	      result="✅ PASS (expected error)"; \
+	      echo "✅ PASS (expected error): $$f"; \
 	      pass=$$((pass+1)); \
 	    else \
-	      result="❌ FAIL"; \
+	      echo "🔴 FAIL: $$f"; \
+	      echo "$$output"; \
 	      fail=$$((fail+1)); \
 	    fi; \
 	  else \
-	    result="✅ PASS"; \
-	    pass=$$((pass+1)); \
+	    if echo "$$f" | grep -q '/X'; then \
+	      echo "🔴 FAIL (no error, but was expected): $$f"; \
+	      fail=$$((fail+1)); \
+	    else \
+	      echo "✅ PASS: $$f"; \
+	      echo "$$output" | grep -v '^$$'; \
+	      pass=$$((pass+1)); \
+	    fi; \
 	  fi; \
-	  echo "$$result: $$f"; \
-	  echo "$$output" | sed 's/^/    /'; \
 	done; \
 	echo ""; \
 	echo "✅ Passed: $$pass"; \
-	echo "❌ Failed: $$fail"; \
-	echo "📊 Total:  $$((pass + fail))"
-
-	@$(MAKE) clean QUIET=1
+	echo "🔴 Failed: $$fail"; \
+	echo "📊 Total:  $$((pass + fail))"; \
+	$(MAKE) clean QUIET=1
 
 clean:
 	@C=0; \

@@ -1,5 +1,5 @@
 Application
   Form
-    Input.text #name
-    Input.password #pass
-  Button.primary #submit
+    Input.text#name
+    Input.password#pass
+  Button.primary#submit

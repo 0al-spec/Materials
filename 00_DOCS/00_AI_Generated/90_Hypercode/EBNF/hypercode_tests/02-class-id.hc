@@ -1,3 +1,3 @@
 Application
-  Button.primary #ok
-  Button.secondary #cancel
+  Button.primary#ok
+  Button.secondary#cancel
