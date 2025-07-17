@@ -1,5 +1,5 @@
 # ANTLR-generated artifacts
-*.java
+Hypercode*.java
 *.class
 *.tokens
 *.interp
