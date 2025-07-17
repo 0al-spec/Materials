@@ -3,13 +3,11 @@ lexer grammar HypercodeLexer;
 @header {
 import java.util.Stack;
 }
-
 @members {
   private Stack<Integer> indentStack = new Stack<>() {{
     push(0);
   }};
   private java.util.LinkedList<Token> pendingTokens = new java.util.LinkedList<>();
-  private int opened = 0;
   private boolean atStartOfLine = true;
 
   @Override
@@ -17,30 +15,44 @@ import java.util.Stack;
     if (!pendingTokens.isEmpty()) return pendingTokens.poll();
 
     Token next = super.nextToken();
+
     if (next.getType() == NEWLINE) {
       atStartOfLine = true;
       return next;
     }
 
-    if (next.getType() == WS && atStartOfLine) {
+    if (next.getType() == INDENT_WS && atStartOfLine) {
       int indent = next.getText().length();
-      int prevIndent = indentStack.peek();
+      int prev = indentStack.peek();
 
-      if (indent > prevIndent) {
+      if (indent > prev) {
         indentStack.push(indent);
         pendingTokens.add(createToken(INDENT, next));
       } else {
-        while (indent < prevIndent) {
+        while (indent < prev) {
           pendingTokens.add(createToken(DEDENT, next));
           indentStack.pop();
-          prevIndent = indentStack.peek();
+          prev = indentStack.peek();
         }
       }
+
       atStartOfLine = false;
-      return super.nextToken(); // skip WS
+      return nextToken(); // skip INDENT_WS manually
     }
 
     atStartOfLine = false;
+
+    if (next.getType() == Token.EOF) {
+        int prev = indentStack.peek();
+        while (prev > 0) {
+            pendingTokens.add(createToken(DEDENT, next));
+            indentStack.pop();
+            prev = indentStack.peek();
+        }
+        pendingTokens.add(next); // push EOF last
+        return pendingTokens.poll();
+    }
+
     return next;
   }
 
@@ -63,14 +75,17 @@ import java.util.Stack;
   }
 }
 
-// ====== LEXER RULES ======
+// These are never matched directly, only inserted from @members
+INDENT: '<INDENT>';
+DEDENT: '<DEDENT>';
 
-INDENT: ;
-DEDENT: ;
+// Track indentation at line start
+INDENT_WS: [ \t]+ ;
+
+// Regular skip whitespace
+SKIP_WS: [ \t]+ -> skip;
 
 NEWLINE: ('\r'? '\n')+ ;
-
-WS: [ \t]+ -> skip ;
 
 IDENTIFIER: [a-zA-Z] [a-zA-Z0-9_-]* ;
 

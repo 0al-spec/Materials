@@ -1,3 +1,3 @@
 Application
-Button
-Cancel
+    Button
+        Cancel

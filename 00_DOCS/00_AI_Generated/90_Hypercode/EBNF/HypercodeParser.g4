@@ -6,9 +6,9 @@ options { tokenVocab=HypercodeLexer; }
 
 hypercode     : statement* ;
 
-statement     : commandLine ;
+statement     : commandLine block? ;
 
-commandLine   : command NEWLINE block? ;
+commandLine   : command NEWLINE ;
 
 command       : IDENTIFIER classDecl? idDecl? ;
 
