@@ -2,7 +2,7 @@
 
 **Status:** Draft
 
-**Version:** 0.1
+**Version:** 0.2.0
 
 **Date:** July 8, 2025
 
@@ -55,6 +55,69 @@ The Hypercode paradigm is built on three main components:
 * **Rule (`@env[...]`)** — A context-aware rule group activated when a specific condition is met.
 * **Execution Context** — The environment that determines which HCS rules are active (e.g., `env=production`).
 * **Resolution Algorithm** — The process for resolving applicable rules based on specificity, precedence, and cascading logic.
+
+### 3.3 How HCS Differs from DI, YAML, and DSLs
+
+A common initial reaction to Hypercode Cascade Sheets is to categorize them as "just another DI container," "a YAML config format," or "yet another DSL." This section clarifies why HCS represents a fundamentally different approach: **a cascade configuration system for behavior**, not a dependency wiring mechanism, a parameter store, or a domain logic language.
+
+#### 3.3.1 Dependency Injection Containers
+
+**What DI does:** DI containers (Spring, Guice, NestJS, etc.) manage object instantiation, lifecycle, and dependency resolution. They construct an object graph at runtime, wiring services together based on type bindings or annotations.
+
+**How HCS differs:**
+
+- **No object creation:** HCS does not instantiate objects or manage their lifecycle. It assumes commands/entities already exist in the `.hc` structure and applies configuration to them.
+- **Language-agnostic:** DI containers are tightly coupled to a specific language runtime. HCS operates at an architectural layer, independent of implementation language.
+- **Cascade over wiring:** DI answers "which implementation to inject." HCS answers "how should this command behave in this context" through selector-based rules.
+
+> **Key distinction:** DI is about *wiring the object graph*; HCS is about *cascade configuration of behavior*.
+
+#### 3.3.2 Plain YAML / Configuration Files
+
+**What YAML configs do:** Traditional configuration files store key-value parameters (database URLs, feature flags, timeouts) without inherent semantics for how or when they apply.
+
+**How HCS differs:**
+
+- **Selectors:** HCS targets configuration using CSS-like selectors (type, class, ID, child combinators), not flat key paths.
+- **Cascade and specificity:** Rules follow a deterministic resolution algorithm where more specific selectors override general ones (see Section 4.2.3).
+- **Contextual rules:** `@env[...]` and similar `@rules` activate entire configuration blocks based on execution context, eliminating scattered `if/else` checks in application code.
+- **Structured hierarchy:** Instead of "YAML sprawl" with deeply nested keys, HCS organizes configuration as composable rule sets.
+
+> **Key distinction:** YAML is *static parameter storage*; HCS is *contextual, cascading configuration with semantic targeting*.
+
+#### 3.3.3 Domain-Specific Languages (DSLs)
+
+**What DSLs do:** DSLs encode domain-specific logic—business rules, workflows, state machines—in a specialized mini-language that often compiles to or executes as code.
+
+**How HCS differs:**
+
+- **No business logic:** HCS does not express workflows, conditions, or computations. Business logic remains in the core code or `.hc` command implementations.
+- **Configuration, not execution:** HCS "styles" existing commands with parameters and behavioral settings, similar to how CSS styles HTML elements without defining their behavior.
+- **Architectural layer:** HCS aims to be a universal configuration mechanism across technology stacks, not a language for a specific domain.
+
+> **Key distinction:** DSLs encode *domain behavior*; HCS applies *cascade configuration over existing architecture*.
+
+#### 3.3.4 Summary Comparison
+
+| Aspect | DI Container | YAML Config | Typical DSL | HCS |
+|--------|--------------|-------------|-------------|-----|
+| **Primary purpose** | Object wiring & lifecycle | Parameter storage | Domain logic/rules | Cascade configuration of behavior |
+| **Language coupling** | High (Java, TS, C#, etc.) | None (format only) | Usually high | Low, language-agnostic |
+| **Creates instances** | Yes | No | Depends | No |
+| **Selector mechanism** | Type bindings, annotations | Flat keys/paths | Varies | CSS-like selectors |
+| **Cascade/specificity** | No | No | Rarely | First-class concept |
+| **Context awareness** | Profiles, scopes | External switching | Embedded logic | `@rules` with execution context |
+
+#### 3.3.5 When to Use HCS
+
+HCS provides advantages in scenarios where:
+
+- **Multi-environment deployment:** The same `.hc` structure must behave differently across dev/staging/production without code changes.
+- **Feature flags and A/B testing:** Contextual rules can toggle behavior based on user segments, experiments, or rollout percentages.
+- **Multi-tenant systems:** Different tenants require different configurations applied to shared command structures.
+- **Agent-based architectures:** AI agents or autonomous components need context-dependent behavioral tuning without modifying core logic.
+
+For simple applications with minimal configuration variance, traditional approaches (DI, plain config files) may suffice. HCS becomes valuable as configuration complexity and contextual variation increase.
 
 ## 4. Syntax and Semantics
 
@@ -257,6 +320,11 @@ The specification assumes that the resolution and execution engine is trusted. N
 * [Terraform Configuration Language](https://developer.hashicorp.com/terraform/language)
 
 ## 12. Change Log
+
+**Version 0.2.0** (2025-11-21):
+
+* Added Section 3.3 "How HCS Differs from DI, YAML, and DSLs" to Core Concepts.
+* Included comparison table and usage guidance for HCS vs. traditional approaches.
 
 **Version 0.1** (2025-07-12):
 
