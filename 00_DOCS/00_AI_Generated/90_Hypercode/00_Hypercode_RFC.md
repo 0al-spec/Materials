@@ -68,9 +68,9 @@ Hypercode provides **declarative simplicity** (via `.hc` files) combined with **
 
 **How Hypercode differs:**
 
-- **No object creation:** `.hcs` files do not instantiate objects or manage their lifecycle. They apply cascade configuration to commands/entities declared in `.hc` files. The `.hc` file defines the declarative structure; the `.hcs` file configures it.
+- **No object creation:** `.hcs` files do not instantiate objects or manage their lifecycle. They apply cascade configuration to elements declared in `.hc` files. The `.hc` file defines the declarative structure; the `.hcs` file configures it.
 - **Language-agnostic:** DI containers are tightly coupled to a specific language runtime. Hypercode (`.hc` + `.hcs`) operates at an architectural layer, independent of implementation language.
-- **Cascade over wiring:** DI answers "which implementation to inject." `.hcs` answers "how should this command behave in this context" through CSS-like selector-based rules applied to the `.hc` structure.
+- **Cascade over wiring:** DI answers "which implementation to inject." `.hcs` answers "how should this element behave in this context" through CSS-like selector-based rules applied to the `.hc` structure.
 
 > **Key distinction:** DI is about *wiring the object graph*; Hypercode is about *declarative structure (.hc) with cascade configuration (.hcs)*.
 
@@ -93,8 +93,8 @@ Hypercode provides **declarative simplicity** (via `.hc` files) combined with **
 
 **How Hypercode differs:**
 
-- **No business logic:** `.hc` files declare command structure without expressing workflows or computations. `.hcs` files configure behavior parameters, not business logic. Core logic remains in command implementations.
-- **Configuration, not execution:** `.hcs` files "style" commands declared in `.hc` with parameters and behavioral settings, similar to how CSS styles HTML elements without defining their behavior.
+- **No business logic:** `.hc` files declare structural elements without expressing workflows or computations. `.hcs` files configure behavior parameters, not business logic. Core logic remains in element implementations.
+- **Configuration, not execution:** `.hcs` files "style" elements declared in `.hc` with parameters and behavioral settings, similar to how CSS styles HTML elements without defining their behavior.
 - **Architectural layer:** Hypercode (`.hc` + `.hcs`) aims to be a universal, language-agnostic configuration mechanism, not a domain-specific language tied to particular business logic.
 
 > **Key distinction:** DSLs encode *domain behavior*; Hypercode separates *declarative structure (.hc)* from *cascade configuration (.hcs)* applied over existing architecture.
@@ -116,7 +116,7 @@ The Hypercode paradigm (`.hc` + `.hcs`) provides advantages in scenarios where:
 
 - **Multi-environment deployment:** The same `.hc` structure can behave differently across dev/staging/production by applying different `.hcs` rules, without modifying the declarative structure.
 - **Feature flags and A/B testing:** `.hcs` contextual rules (`@rules`) can toggle behavior based on user segments, experiments, or rollout percentages while keeping `.hc` structure unchanged.
-- **Multi-tenant systems:** Different tenants require different `.hcs` configurations applied to a shared `.hc` command structure.
+- **Multi-tenant systems:** Different tenants require different `.hcs` configurations applied to a shared `.hc` element structure.
 - **Agent-based architectures:** AI agents or autonomous components defined in `.hc` files need context-dependent behavioral tuning via `.hcs` files without modifying core logic.
 
 For simple applications with minimal configuration variance, traditional approaches (DI, plain config files) may suffice. Hypercode becomes valuable when you need both **declarative simplicity** (`.hc`) and **flexible cascade configuration** (`.hcs`) as complexity and contextual variation increase.
