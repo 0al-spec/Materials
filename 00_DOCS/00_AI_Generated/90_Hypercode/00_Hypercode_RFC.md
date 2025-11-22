@@ -56,51 +56,51 @@ The Hypercode paradigm is built on three main components:
 * **Execution Context** — The environment that determines which HCS rules are active (e.g., `env=production`).
 * **Resolution Algorithm** — The process for resolving applicable rules based on specificity, precedence, and cascading logic.
 
-### 3.3 How HCS Differs from DI, YAML, and DSLs
+### 3.3 How Hypercode Differs from DI, YAML, and DSLs
 
-A common initial reaction to Hypercode Cascade Sheets is to categorize them as "just another DI container," "a YAML config format," or "yet another DSL." This section clarifies why HCS represents a fundamentally different approach: **a cascade configuration system for behavior**, not a dependency wiring mechanism, a parameter store, or a domain logic language.
+A common initial reaction to Hypercode Cascade Sheets is to categorize them as "just another DI container," "a YAML config format," or "yet another DSL." This section clarifies why Hypercode represents a fundamentally different approach: **a cascade configuration system for behavior**, not a dependency wiring mechanism, a parameter store, or a domain logic language.
 
 #### 3.3.1 Dependency Injection Containers
 
 **What DI does:** DI containers (Spring, Guice, NestJS, etc.) manage object instantiation, lifecycle, and dependency resolution. They construct an object graph at runtime, wiring services together based on type bindings or annotations.
 
-**How HCS differs:**
+**How Hypercode differs:**
 
-- **No object creation:** HCS does not instantiate objects or manage their lifecycle. It assumes commands/entities already exist in the `.hc` structure and applies configuration to them.
-- **Language-agnostic:** DI containers are tightly coupled to a specific language runtime. HCS operates at an architectural layer, independent of implementation language.
-- **Cascade over wiring:** DI answers "which implementation to inject." HCS answers "how should this command behave in this context" through selector-based rules.
+- **No object creation:** Hypercode does not instantiate objects or manage their lifecycle. It assumes commands/entities already exist in the `.hc` structure and applies configuration to them.
+- **Language-agnostic:** DI containers are tightly coupled to a specific language runtime. Hypercode operates at an architectural layer, independent of implementation language.
+- **Cascade over wiring:** DI answers "which implementation to inject." Hypercode answers "how should this command behave in this context" through selector-based rules.
 
-> **Key distinction:** DI is about *wiring the object graph*; HCS is about *cascade configuration of behavior*.
+> **Key distinction:** DI is about *wiring the object graph*; Hypercode is about *cascade configuration of behavior*.
 
 #### 3.3.2 Plain YAML / Configuration Files
 
 **What YAML configs do:** Traditional configuration files store key-value parameters (database URLs, feature flags, timeouts) without inherent semantics for how or when they apply.
 
-**How HCS differs:**
+**How Hypercode differs:**
 
-- **Selectors:** HCS targets configuration using CSS-like selectors (type, class, ID, child combinators), not flat key paths.
+- **Selectors:** Hypercode targets configuration using CSS-like selectors (type, class, ID, child combinators), not flat key paths.
 - **Cascade and specificity:** Rules follow a deterministic resolution algorithm where more specific selectors override general ones (see Section 4.2.3).
 - **Contextual rules:** `@env[...]` and similar `@rules` activate entire configuration blocks based on execution context, eliminating scattered `if/else` checks in application code.
-- **Structured hierarchy:** Instead of "YAML sprawl" with deeply nested keys, HCS organizes configuration as composable rule sets.
+- **Structured hierarchy:** Instead of "YAML sprawl" with deeply nested keys, Hypercode organizes configuration as composable rule sets.
 
-> **Key distinction:** YAML is *static parameter storage*; HCS is *contextual, cascading configuration with semantic targeting*.
+> **Key distinction:** YAML is *static parameter storage*; Hypercode is *contextual, cascading configuration with semantic targeting*.
 
 #### 3.3.3 Domain-Specific Languages (DSLs)
 
 **What DSLs do:** DSLs encode domain-specific logic—business rules, workflows, state machines—in a specialized mini-language that often compiles to or executes as code.
 
-**How HCS differs:**
+**How Hypercode differs:**
 
-- **No business logic:** HCS does not express workflows, conditions, or computations. Business logic remains in the core code or `.hc` command implementations.
-- **Configuration, not execution:** HCS "styles" existing commands with parameters and behavioral settings, similar to how CSS styles HTML elements without defining their behavior.
-- **Architectural layer:** HCS aims to be a universal configuration mechanism across technology stacks, not a language for a specific domain.
+- **No business logic:** Hypercode does not express workflows, conditions, or computations. Business logic remains in the core code or `.hc` command implementations.
+- **Configuration, not execution:** Hypercode "styles" existing commands with parameters and behavioral settings, similar to how CSS styles HTML elements without defining their behavior.
+- **Architectural layer:** Hypercode aims to be a universal configuration mechanism across technology stacks, not a language for a specific domain.
 
-> **Key distinction:** DSLs encode *domain behavior*; HCS applies *cascade configuration over existing architecture*.
+> **Key distinction:** DSLs encode *domain behavior*; Hypercode applies *cascade configuration over existing architecture*.
 
 #### 3.3.4 Summary Comparison
 
-| Aspect | DI Container | YAML Config | Typical DSL | HCS |
-|--------|--------------|-------------|-------------|-----|
+| Aspect | DI Container | YAML Config | Typical DSL | Hypercode |
+|--------|--------------|-------------|-------------|-----------|
 | **Primary purpose** | Object wiring & lifecycle | Parameter storage | Domain logic/rules | Cascade configuration of behavior |
 | **Language coupling** | High (Java, TS, C#, etc.) | None (format only) | Usually high | Low, language-agnostic |
 | **Creates instances** | Yes | No | Depends | No |
@@ -108,16 +108,16 @@ A common initial reaction to Hypercode Cascade Sheets is to categorize them as "
 | **Cascade/specificity** | No | No | Rarely | First-class concept |
 | **Context awareness** | Profiles, scopes | External switching | Embedded logic | `@rules` with execution context |
 
-#### 3.3.5 When to Use HCS
+#### 3.3.5 When to Use Hypercode
 
-HCS provides advantages in scenarios where:
+Hypercode provides advantages in scenarios where:
 
 - **Multi-environment deployment:** The same `.hc` structure must behave differently across dev/staging/production without code changes.
 - **Feature flags and A/B testing:** Contextual rules can toggle behavior based on user segments, experiments, or rollout percentages.
 - **Multi-tenant systems:** Different tenants require different configurations applied to shared command structures.
 - **Agent-based architectures:** AI agents or autonomous components need context-dependent behavioral tuning without modifying core logic.
 
-For simple applications with minimal configuration variance, traditional approaches (DI, plain config files) may suffice. HCS becomes valuable as configuration complexity and contextual variation increase.
+For simple applications with minimal configuration variance, traditional approaches (DI, plain config files) may suffice. Hypercode becomes valuable as configuration complexity and contextual variation increase.
 
 ## 4. Syntax and Semantics
 
@@ -323,8 +323,8 @@ The specification assumes that the resolution and execution engine is trusted. N
 
 **Version 0.2.0** (2025-11-21):
 
-* Added Section 3.3 "How HCS Differs from DI, YAML, and DSLs" to Core Concepts.
-* Included comparison table and usage guidance for HCS vs. traditional approaches.
+* Added Section 3.3 "How Hypercode Differs from DI, YAML, and DSLs" to Core Concepts.
+* Included comparison table and usage guidance for Hypercode vs. traditional approaches.
 
 **Version 0.1** (2025-07-12):
 
