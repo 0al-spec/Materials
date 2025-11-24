@@ -2,15 +2,15 @@
 
 ## 1. Purpose
 
-Hypercode is an executable architecture language.
+Hypercode is a declarative architecture language.
 
-It is designed to describe how a system behaves at the level of architecture:
+It is designed to describe the structural shape of a system at the architectural level:
 - which elements (agents, services, commands, tasks) exist,
-- how they are connected,
-- which flows, branches, and policies govern their interaction,
-- how these flows change across environments, tenants, and feature sets.
+- how they are structurally connected,
+- which stages, alternative paths, and policy attachment points are declared,
+- how contextual rules (.hcs) modulate this structure across environments, tenants, and feature sets.
 
-Its goal is not to replace general-purpose languages, but to become the canonical place where the actual system behavior is defined at the architectural level.
+Its goal is not to replace general-purpose languages, but to become the canonical place where the system's architectural topology is defined—with runtime behavior emerging from the combination of declared structure (.hc) and cascade rules (.hcs).
 
 ---
 
