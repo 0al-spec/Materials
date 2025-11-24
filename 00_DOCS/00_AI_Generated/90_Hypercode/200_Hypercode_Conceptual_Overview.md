@@ -18,7 +18,7 @@ Its goal is not to replace general-purpose languages, but to become the canonica
 
 Hypercode consists of two tightly related artifacts:
 
-1. **Hypercode file (.hc)** – architectural skeleton & base logic
+1. **Hypercode file (.hc)** – architectural skeleton & structural declarations
    - Declares structural elements of the system (nodes, agents, commands, pipelines, states).
    - Declares structural topology and element relationships:
      - which elements exist and their hierarchical containment,
@@ -37,7 +37,7 @@ Hypercode consists of two tightly related artifacts:
    - Uses cascade semantics: more specific rules override general ones in a deterministic way.
    - Uses context-aware directives (@env, @profile, @feature, etc.) to express how architecture changes across environments and scenarios.
 
-Together, .hc and .hcs describe an executable architectural program.
+Together, .hc and .hcs form a complete architectural specification that the runtime interprets and executes.
 
 ---
 
@@ -58,7 +58,7 @@ Hypercode deliberately separates levels of logic:
 - How a request is validated against a schema.
 - How cryptographic primitives are implemented.
 
-Hypercode is the source of truth for "what happens in the system" at the architectural level.
+Hypercode is the source of truth for "what exists and how it is arranged" at the architectural level.
 Host languages are the source of truth for "how each atomic step works internally".
 
 ---
@@ -104,7 +104,7 @@ This allows:
 
 Hypercode is intentionally orthogonal to many existing tools:
 
-- **It is not a DI container**: DI focuses on object graphs and injection; Hypercode focuses on behavioral flows and architectural policies.
+- **It is not a DI container**: DI focuses on object graphs and injection; Hypercode focuses on architectural topology and contextual policies.
 - **It is not a plain config format**: configs store parameters; Hypercode defines the executable architecture of the system and how it varies.
 - **It is not just another DSL**:
   - It is a system-level DSL for executable architecture,
