@@ -20,12 +20,12 @@ Hypercode consists of two tightly related artifacts:
 
 1. **Hypercode file (.hc)** – architectural skeleton & base logic
    - Declares structural elements of the system (nodes, agents, commands, pipelines, states).
-   - Describes high-level control flow and relationships:
-     - who calls whom,
-     - which steps form a pipeline,
-     - which branches or fallbacks exist,
-     - what events or conditions connect elements.
-   - This is already logic – but at the level of architecture, not at the level of algorithms.
+   - Declares structural topology and element relationships:
+     - which elements exist and their hierarchical containment,
+     - which stages form a sequence,
+     - which named alternatives or fallback slots are declared,
+     - what structural connections exist between elements.
+   - This is already meaningful structure – it defines the architectural shape of the system, not algorithmic behavior.
 
 2. **Hypercode Cascade Sheet (.hcs)** – contextual specialization & policies
    - Contains selector-based rules that apply to elements declared in .hc.
@@ -45,10 +45,10 @@ Together, .hc and .hcs describe an executable architectural program.
 
 Hypercode deliberately separates levels of logic:
 
-**Architectural & orchestration logic – in Hypercode**
+**Architectural topology & orchestration structure – in Hypercode**
 - Which components participate in a scenario.
-- In which order they run.
-- Which branches exist and when they're taken.
+- In which sequence they are declared.
+- Which alternative paths are structurally defined.
 - Which policies and strategies are applied in which context.
 - How agents/systems are wired logically across boundaries.
 
@@ -71,13 +71,13 @@ Hypercode is not "just configuration":
   - loads .hc and .hcs,
   - builds an architectural execution graph,
   - applies cascade and context resolution,
-  - drives the actual execution of workflows, routes, and agent interactions.
+  - interprets the declared structure and drives execution according to resolved cascade rules.
 
 Important nuances:
 - Hypercode does not directly construct objects or manage memory; it tells the runtime:
-  - which roles and elements must exist,
-  - how they are connected,
-  - under which conditions they're active.
+  - which roles and elements are declared,
+  - how they are structurally connected,
+  - which context rules from .hcs govern their activation.
 - The runtime maps Hypercode elements to concrete objects, services, processes, or containers in a given platform:
   - Swift objects, Java services, microservices, actors, etc.
 
@@ -111,4 +111,4 @@ Hypercode is intentionally orthogonal to many existing tools:
   - language-agnostic by design, meant to sit above general-purpose languages,
   - with cascade and context as first-class constructs.
 
-Hypercode is the place where system behavior as a whole is written, read, reviewed, versioned, and reasoned about.
+Hypercode is the place where the system's architectural structure is written, read, reviewed, versioned, and reasoned about—with behavior emerging from the combination of declared structure (.hc) and contextual rules (.hcs).
