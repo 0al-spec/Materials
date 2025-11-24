@@ -58,68 +58,124 @@ The Hypercode paradigm is built on three main components:
 
 ### 3.3 How Hypercode Differs from DI, YAML, and DSLs
 
-A common initial reaction to Hypercode Cascade Sheets is to categorize them as "just another DI container," "a YAML config format," or "yet another DSL." This section clarifies why the Hypercode paradigm—the combination of declarative `.hc` structure files and cascading `.hcs` configuration sheets—represents a fundamentally different approach.
+A common initial reaction to Hypercode is to categorize it as "just another DI container," "a YAML-based configuration format," or "yet another DSL." This section clarifies how the Hypercode paradigm — the combination of declarative `.hc` structure files and cascading `.hcs` sheets — differs from these categories.
 
-Hypercode provides **declarative simplicity** (via `.hc` files) combined with **cascade configuration power** (via `.hcs` files), rather than being a dependency wiring mechanism, a parameter store, or a domain logic language.
+Hypercode is an **executable architecture language**. `.hc` files describe the architectural graph and high-level workflows of a system. `.hcs` files apply cascade- and context-aware rules that specialize this architecture for different environments, tenants, and feature sets. Together they define how the system behaves at the architectural level, while algorithmic details remain in the host languages and runtime implementations.
 
 #### 3.3.1 Dependency Injection Containers
 
-**What DI does:** DI containers (Spring, Guice, NestJS, etc.) manage object instantiation, lifecycle, and dependency resolution. They construct an object graph at runtime, wiring services together based on type bindings or annotations.
+**What DI containers do**
 
-**How Hypercode differs:**
+Dependency Injection (DI) containers (e.g., Spring, Guice, NestJS) focus on:
 
-- **No object creation:** `.hcs` files do not instantiate objects or manage their lifecycle. They apply cascade configuration to elements declared in `.hc` files. The `.hc` file defines the declarative structure; the `.hcs` file configures it.
-- **Language-agnostic:** DI containers are tightly coupled to a specific language runtime. Hypercode (`.hc` + `.hcs`) operates at an architectural layer, independent of implementation language.
-- **Cascade over wiring:** DI answers "which implementation to inject." `.hcs` answers "how should this element behave in this context" through CSS-like selector-based rules applied to the `.hc` structure.
+- constructing an object graph at runtime;
+- managing object lifecycles and scopes;
+- resolving dependencies based on types, annotations, or configuration.
 
-> **Key distinction:** DI is about *wiring the object graph*; Hypercode is about *declarative structure (.hc) with cascade configuration (.hcs)*.
+Their primary concern is: **"which concrete implementation should be injected into this dependency slot?"**
+
+**How Hypercode differs**
+
+Hypercode operates at a different level:
+
+- **Architectural workflows, not only object graphs**
+  `.hc` files declare architectural elements (agents, services, tasks, pipelines) and the flows between them — which elements participate in a scenario, in which order, along which branches. Dependency wiring inside each element is left to DI or other mechanisms.
+
+- **Runtime-agnostic architectural model**
+  DI containers are tightly coupled to a specific language and runtime. Hypercode defines an architectural model that can be interpreted by different runtimes (Swift, JVM, JS, etc.), which map Hypercode elements to concrete objects and services.
+
+- **Policies and context, not just bindings**
+  `.hcs` files do not directly create objects. Instead they apply **policies** and **context-dependent rules** to elements declared in `.hc`: which routes to use, which strategies or limits apply, which branches are enabled for a given environment, tenant, or feature combination.
+
+The key distinction is:
+
+> **DI is about object-level wiring and lifecycle; Hypercode is about executable architectural workflows and policies over the system as a whole.**
+
+A DI container may be used *inside* individual elements, but Hypercode sits *above* it, orchestrating how those elements cooperate.
+
+---
 
 #### 3.3.2 Plain YAML / Configuration Files
 
-**What YAML configs do:** Traditional configuration files store key-value parameters (database URLs, feature flags, timeouts) without inherent semantics for how or when they apply.
+**What typical config files do**
 
-**How Hypercode differs:**
+Traditional configuration formats (often YAML or JSON) provide:
 
-- **Declarative structure + selectors:** `.hc` files provide clean declarative structure (like HTML), while `.hcs` files target configuration using CSS-like selectors (type, class, ID, child combinators), not flat key paths.
-- **Cascade and specificity:** `.hcs` rules follow a deterministic resolution algorithm where more specific selectors override general ones (see Section 4.2.3).
-- **Contextual rules:** `@env[...]` and similar `@rules` in `.hcs` files activate entire configuration blocks based on execution context, eliminating scattered `if/else` checks in application code.
-- **Separation of structure and configuration:** Instead of mixing structure and parameters in nested YAML, Hypercode separates them: `.hc` defines what exists, `.hcs` defines how it's configured.
+- key–value parameters and nested structures;
+- platform- or tool-specific resource descriptions (e.g., Kubernetes manifests, CI pipelines);
+- limited or externalized semantics for how configurations are composed, overridden, or activated.
 
-> **Key distinction:** YAML is *static parameter storage*; Hypercode combines *declarative structure (.hc)* with *contextual cascade configuration (.hcs)*.
+The format itself is mostly agnostic; semantics come from the tool that interprets it.
+
+**How Hypercode differs**
+
+Hypercode defines a **language with its own architectural semantics**, rather than just a data format:
+
+- **Structural model instead of arbitrary trees**
+  `.hc` files describe a graph of well-defined elements (nodes, edges, pipelines, agents). This is closer to an architectural model than to a generic YAML document.
+
+- **Selectors and cascade as built-in semantics**
+  `.hcs` files target elements from `.hc` via CSS-like selectors (by type, ID, tags, containment, etc.). Multiple rules can affect the same element, and a deterministic cascade algorithm resolves which rule wins. This cascade is part of the Hypercode specification, not a convention implemented separately by each tool.
+
+- **Context-aware rules as first-class constructs**
+  Directives like `@env[...]`, `@profile[...]`, or `@feature[...]` allow entire rule blocks to be activated or suppressed based on the execution context. This centralizes environment- and feature-specific behavior into `.hcs` instead of scattering `if (env == "prod")` checks throughout the codebase.
+
+- **Executable architecture, not just parameters**
+  While `.hcs` can provide parameters, its primary role is to **shape the behavior of the architectural graph**: which paths exist, which elements are active, which policies are applied under which conditions.
+
+The key distinction is:
+
+> **YAML-based configs store data for a particular tool; Hypercode defines an executable architectural model with explicit cascade and context semantics.**
+
+---
 
 #### 3.3.3 Domain-Specific Languages (DSLs)
 
-**What DSLs do:** DSLs encode domain-specific logic—business rules, workflows, state machines—in a specialized mini-language that often compiles to or executes as code.
+**What typical DSLs do**
 
-**How Hypercode differs:**
+Many DSLs encode business logic or workflows inside a specialized language:
 
-- **No business logic:** `.hc` files declare structural elements without expressing workflows or computations. `.hcs` files configure behavior parameters, not business logic. Core logic remains in element implementations.
-- **Configuration, not execution:** `.hcs` files "style" elements declared in `.hc` with parameters and behavioral settings, similar to how CSS styles HTML elements without defining their behavior.
-- **Architectural layer:** Hypercode (`.hc` + `.hcs`) aims to be a universal, language-agnostic configuration mechanism, not a domain-specific language tied to particular business logic.
+- rules engines and decision tables;
+- scripting languages for automation or orchestration;
+- domain-specific workflow engines and state machines.
 
-> **Key distinction:** DSLs encode *domain behavior*; Hypercode separates *declarative structure (.hc)* from *cascade configuration (.hcs)* applied over existing architecture.
+These DSLs often express **domain-level algorithms and control flow** directly within the language, sometimes compiling down to host-language code or bytecode.
+
+**How Hypercode differs**
+
+Hypercode is also a kind of DSL, but of a different class:
+
+- **Architectural, not algorithmic focus**
+  `.hc` describes which elements exist and how they are connected in high-level workflows. It defines **who participates and in which order**, but not how each step performs its internal computation. That internal behavior stays in the host language.
+
+- **Separation of architectural logic and implementation details**
+  `.hcs` files specialize and modulate this architecture for different contexts: which paths are active, which strategies are chosen, which policies apply. They express **architectural decisions** (routes, policies, feature variants), not low-level algorithms or domain-specific math.
+
+- **Language-agnostic and runtime-pluggable**
+  Many DSLs are tightly coupled to a specific runtime or product. Hypercode aims to provide a **portable architectural specification** that can be consumed by multiple runtimes, each binding Hypercode elements to their own implementation types and protocols.
+
+The key distinction is:
+
+> **Traditional DSLs often encode domain algorithms; Hypercode encodes executable architecture — the system's structure, flows, and policies — while delegating algorithmic details to host languages.**
+
+---
 
 #### 3.3.4 Summary Comparison
 
-| Aspect | DI Container | YAML Config | Typical DSL | Hypercode (.hc + .hcs) |
-|--------|--------------|-------------|-------------|------------------------|
-| **Primary purpose** | Object wiring & lifecycle | Parameter storage | Domain logic/rules | Declarative structure + cascade configuration |
-| **Language coupling** | High (Java, TS, C#, etc.) | None (format only) | Usually high | Low, language-agnostic |
-| **Creates instances** | Yes | No | Depends | No (.hc declares, .hcs configures) |
-| **Selector mechanism** | Type bindings, annotations | Flat keys/paths | Varies | CSS-like selectors (.hcs → .hc) |
-| **Cascade/specificity** | No | No | Rarely | First-class concept in .hcs |
-| **Context awareness** | Profiles, scopes | External switching | Embedded logic | `@rules` in .hcs with execution context |
+The table below summarizes how Hypercode compares to DI containers, YAML configs, and typical DSLs along several dimensions.
 
-#### 3.3.5 When to Use Hypercode
+| Aspect                  | DI Container                           | YAML Config & Manifests                        | Typical DSL                                   | Hypercode (`.hc` + `.hcs`)                                       |
+|-------------------------|----------------------------------------|------------------------------------------------|-----------------------------------------------|-------------------------------------------------------------------|
+| Primary focus           | Object wiring & lifecycle              | Parameters and platform-specific resources     | Domain rules or workflows                     | Executable architecture: structure, flows, and policies           |
+| Level of abstraction    | Objects and services                   | Data structures                                | Varies (often domain-level algorithms)        | System-level architecture and orchestration                       |
+| Language coupling       | High (tied to a specific language)     | Format-only; semantics defined per tool        | Usually tied to one runtime/tool              | Language-agnostic architectural model, interpreted by runtimes    |
+| Instance management     | Constructs and owns instances          | Does not define instances                      | Depends on DSL                                | Declares roles and flows; runtimes map them to concrete instances |
+| Selector mechanism      | Types, qualifiers, annotations         | Keys/paths, sometimes overlays                 | Varies                                        | CSS-like selectors from `.hcs` targeting elements in `.hc`        |
+| Cascade / composition   | No general cascade semantics           | Tool-specific overlays/merges                  | Depends on implementation                     | Built-in cascade with specificity and precedence in `.hcs`        |
+| Context awareness       | Profiles, scopes within DI             | Often externalized in tooling or templates     | Embedded conditions in rules/scripts          | First-class context rules (`@env`, `@profile`, `@feature`, …)     |
+| Execution role          | Supports construction for execution    | Supplies data to an external executor          | Directly drives execution in a domain         | Drives execution at the architectural level via a Hypercode runtime |
 
-The Hypercode paradigm (`.hc` + `.hcs`) provides advantages in scenarios where:
-
-- **Multi-environment deployment:** The same `.hc` structure can behave differently across dev/staging/production by applying different `.hcs` rules, without modifying the declarative structure.
-- **Feature flags and A/B testing:** `.hcs` contextual rules (`@rules`) can toggle behavior based on user segments, experiments, or rollout percentages while keeping `.hc` structure unchanged.
-- **Multi-tenant systems:** Different tenants require different `.hcs` configurations applied to a shared `.hc` element structure.
-- **Agent-based architectures:** AI agents or autonomous components defined in `.hc` files need context-dependent behavioral tuning via `.hcs` files without modifying core logic.
-
-For simple applications with minimal configuration variance, traditional approaches (DI, plain config files) may suffice. Hypercode becomes valuable when you need both **declarative simplicity** (`.hc`) and **flexible cascade configuration** (`.hcs`) as complexity and contextual variation increase.
+Hypercode can coexist with DI containers, YAML-based tooling, and other DSLs. It is meant to **sit above them as the source of truth for system-level behavior**, providing a unified architectural program that runtimes and tools can interpret and execute.
 
 ## 4. Syntax and Semantics
 
